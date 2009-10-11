@@ -53,25 +53,24 @@ tint_pixel_rgb (unsigned char *bitmapData, int red_index, CGFloat *matrix)
 
     uint64_t start = mach_absolute_time();
 
-#if 1
-    for (int i = 0; i < pixels; i = i + samplesPerPixel) {
-        tint_pixel_rgb(bitmapData, i, matrix);
-    }
-#else
-
+#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1060 // libdispatch is only available on Mac OS X 10.6 or later.
     int stride = [bitmap bytesPerRow] / samplesPerPixel;
     dispatch_apply(pixels / samplesPerPixel / stride,
                    dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
                    ^(size_t i){
                        size_t j = i * samplesPerPixel * stride;
                        size_t jStop = j + samplesPerPixel * stride;
-
+                       
                        do {
                            tint_pixel_rgb(bitmapData, j, matrix);
                            
                            j += samplesPerPixel;
                        } while (j < jStop);
                    });
+#else
+    for (int i = 0; i < pixels; i = i + samplesPerPixel) {
+        tint_pixel_rgb(bitmapData, i, matrix);
+    }
 #endif
 
     
