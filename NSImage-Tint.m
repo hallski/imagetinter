@@ -7,22 +7,25 @@
 //
 
 #import "NSImage-Tint.h"
-#include <mach/mach_time.h>
+
 
 CGFloat const TBITintMatrixGrayscale[] = {
-    .3, .59, .11,
-    .3, .59, .11,
-    .3, .59, .11 };
+    0.3, 0.59, 0.11,
+    0.3, 0.59, 0.11,
+    0.3, 0.59, 0.11
+};
 
 CGFloat const TBITintMatrixSepia[] = {
-    .393, .769, .189,
-    .349, .686, .168,
-    .272, .534, .131 };
+    0.393, 0.769, 0.189,
+    0.349, 0.686, 0.168,
+    0.272, 0.534, 0.131
+};
 
 CGFloat const TBITintMatrixBluetone[] = {
-    .272, .534, .131,
-    .349, .686, .168,
-    .393, .769, .189 };
+    0.272, 0.534, 0.131,
+    0.349, 0.686, 0.168,
+    0.393, 0.769, 0.189
+};
 
 void
 tint_pixel_rgb (unsigned char *bitmapData, int red_index, const CGFloat *matrix)
@@ -34,7 +37,7 @@ tint_pixel_rgb (unsigned char *bitmapData, int red_index, const CGFloat *matrix)
     CGFloat green = bitmapData[green_index] ;
     CGFloat blue = bitmapData[blue_index];
     
-    bitmapData[red_index]     = MIN (red * matrix[0] + green * matrix[1] + blue * matrix[2], 255.0f); // red
+    bitmapData[red_index] = MIN (red * matrix[0] + green * matrix[1] + blue * matrix[2], 255.0f); // red
     bitmapData[green_index] = MIN (red * matrix[3] + green * matrix[4] + blue * matrix[5], 255.0f); // green
     bitmapData[blue_index] = MIN (red * matrix[6] + green * matrix[7] + blue * matrix[8], 255.0f); // blue    
 }
@@ -50,8 +53,8 @@ tint_pixel_rgb (unsigned char *bitmapData, int red_index, const CGFloat *matrix)
     int pixels = imageSize.height * [bitmap bytesPerRow];
     unsigned char *bitmapData = [bitmap bitmapData];
     int samplesPerPixel = [bitmap samplesPerPixel];
-
-    uint64_t start = mach_absolute_time();
+    
+    NSDate *start = [NSDate date];
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1060 // libdispatch is only available on Mac OS X 10.6 or later.
     int stride = [bitmap bytesPerRow] / samplesPerPixel;
@@ -73,17 +76,12 @@ tint_pixel_rgb (unsigned char *bitmapData, int red_index, const CGFloat *matrix)
     }
 #endif
 
-    
-    // Evil ugly timing pointer/int juggling, from the documentation:
-    uint64_t elapsed = mach_absolute_time() - start;
-    Nanoseconds elapsedNano = AbsoluteToNanoseconds(*(AbsoluteTime *)&elapsed);
-    uint64_t elapsedNanoInt = *(uint64_t *)&elapsedNano;
-    NSLog(@"Elapsed time: %.2f ms", elapsedNanoInt / 1000000.0);
-
-    
     NSImage *image = [[NSImage alloc] initWithSize:[bitmap size]];
     [image addRepresentation:bitmap];
         
+    NSTimeInterval elapsedSeconds = -[start timeIntervalSinceNow];
+    NSLog(@"Elapsed time: %.2f ms", elapsedSeconds * 1000);
+    
     return image;
 }
 

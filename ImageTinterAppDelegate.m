@@ -9,34 +9,40 @@
 #import "ImageTinterAppDelegate.h"
 #import "NSImage-Tint.h"
 
-@implementation ImageTinterAppDelegate
+@interface ImageTinterAppDelegate () {
+    NSImage *image;
+}
+@end
 
-@synthesize window;
+@implementation ImageTinterAppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification 
 {
-    image = [[NSImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"photo" ofType:@"jpg"]];
-    [imageView setImage:image];
+    NSString *fileName = [[NSBundle mainBundle] pathForResource:@"photo" ofType:@"jpg"];
+    
+    image = [[NSImage alloc] initWithContentsOfFile:fileName];
+    
+    [[self imageView] setImage:image];
 }
 
 - (IBAction)normalImage:(id)sender
 {
-    [imageView setImage:image];
+    [[self imageView] setImage:image];
 }
 
 - (IBAction)grayscaleImage:(id)sender
 {
-    [imageView setImage:[image grayscaleImage]];
+    [[self imageView] setImage:[image grayscaleImage]];
 }
 
 - (IBAction)sepiaImage:(id)sender
 {
-    [imageView setImage:[image sepiaImage]];
+    [[self imageView] setImage:[image sepiaImage]];
 }
 
 - (IBAction)blueToneImage:(id)sender
 {
-    [imageView setImage:[image bluetoneImage]];
+    [[self imageView] setImage:[image bluetoneImage]];
 }
 
 @end

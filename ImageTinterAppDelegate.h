@@ -8,13 +8,10 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface ImageTinterAppDelegate : NSObject <NSApplicationDelegate> {
-    NSWindow *__weak window;
-    NSImage *image;
-    IBOutlet NSImageView *imageView;
-}
+@interface ImageTinterAppDelegate : NSObject <NSApplicationDelegate>
 
-@property (weak) IBOutlet NSWindow *window;
+@property(weak) IBOutlet NSWindow *window;
+@property(strong) IBOutlet NSImageView *imageView;
 
 - (IBAction)normalImage:(id)sender;
 - (IBAction)grayscaleImage:(id)sender;
