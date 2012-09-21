@@ -25,7 +25,7 @@ CGFloat const TBITintMatrixBluetone[] = {
     .393, .769, .189 };
 
 void
-tint_pixel_rgb (unsigned char *bitmapData, int red_index, CGFloat *matrix)
+tint_pixel_rgb (unsigned char *bitmapData, int red_index, const CGFloat *matrix)
 {
     int green_index = red_index + 1;
     int blue_index = red_index + 2;
@@ -41,7 +41,7 @@ tint_pixel_rgb (unsigned char *bitmapData, int red_index, CGFloat *matrix)
 
 @implementation NSImage (Tint)
 
-- (NSImage *)tintWithMatrix:(CGFloat *)matrix;
+- (NSImage *)tintWithMatrix:(const CGFloat *)matrix;
 {
     NSBitmapImageRep *bitmap = [[NSBitmapImageRep alloc] initWithData:[self TIFFRepresentation]];
     
