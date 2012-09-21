@@ -83,9 +83,8 @@ tint_pixel_rgb (unsigned char *bitmapData, int red_index, const CGFloat *matrix)
     
     NSImage *image = [[NSImage alloc] initWithSize:[bitmap size]];
     [image addRepresentation:bitmap];
-    [bitmap release];
         
-    return [image autorelease];
+    return image;
 }
 
 - (NSImage *)grayscaleImage
